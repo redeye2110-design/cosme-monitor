@@ -12,6 +12,7 @@ class Product:
     currency: str
     image_url: str
     product_url: str
+    image_bytes: bytes = b""  # downloaded at scrape time; not persisted to state
 
     @property
     def state_key(self) -> str:

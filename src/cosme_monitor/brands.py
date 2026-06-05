@@ -33,6 +33,8 @@ class BrandConfig:
     use_playwright: bool = field(default=False)
     playwright_wait_selector: str | None = field(default=None)
     use_curl_cffi: bool = field(default=False)
+    playwright_image_selector: str | None = field(default=None)
+    # CSS selector for <img> inside [data-pid] to download during Playwright scrape
 
 
 def _clean(text: str) -> str:
@@ -79,6 +81,7 @@ def parse_dior_html(html: str) -> list[Product]:
                 currency="JPY",
                 image_url=image.get("src", "") if image else "",
                 product_url=urljoin("https://www.dior.com", link.get("href", "")),
+                image_bytes=_get_playwright_image(pid),
             )
         )
     return products
@@ -150,6 +153,7 @@ BRANDS = (
         parse_dior_html,
         use_playwright=True,
         playwright_wait_selector="div.product[data-pid]",
+        playwright_image_selector="div.product[data-pid] img.tile-image",
     ),
     BrandConfig("CHANEL", "https://www.chanel.com/jp/fragrance-beauty/new-arrivals/", parse_chanel_html),
     BrandConfig(
@@ -210,6 +214,13 @@ def _fetch_html(url: str, session: requests.Session, user_agent: str) -> str:
     return html
 
 
+_playwright_images: dict[str, bytes] = {}
+
+
+def _get_playwright_image(pid: str) -> bytes:
+    return _playwright_images.get(pid, b"")
+
+
 _STEALTH_SCRIPT = """
 Object.defineProperty(navigator, 'webdriver', {get: () => false});
 Object.defineProperty(navigator, 'plugins', {get: () => [1, 2, 3, 4, 5]});
@@ -223,8 +234,16 @@ window.navigator.permissions.query = (p) =>
 """
 
 
-def _fetch_html_playwright(url: str, user_agent: str, wait_selector: str | None = None) -> str:
+def _fetch_html_playwright(
+    url: str,
+    user_agent: str,
+    wait_selector: str | None = None,
+    image_selector: str | None = None,
+) -> str:
     from playwright.sync_api import sync_playwright  # lazy import — optional dep
+
+    global _playwright_images
+    _playwright_images = {}
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
@@ -241,7 +260,23 @@ def _fetch_html_playwright(url: str, user_agent: str, wait_selector: str | None 
             try:
                 page.wait_for_selector(wait_selector, timeout=30_000)
             except Exception:  # noqa: BLE001
-                pass  # proceed with whatever rendered so far
+                pass
+        if image_selector:
+            try:
+                for img_handle in page.query_selector_all(image_selector):
+                    pid = img_handle.evaluate(
+                        "el => el.closest('[data-pid]')?.dataset?.pid ?? ''"
+                    )
+                    src = img_handle.get_attribute("src") or ""
+                    if pid and src:
+                        try:
+                            resp = context.request.get(src, timeout=10_000)
+                            if resp.ok:
+                                _playwright_images[pid] = bytes(resp.body())
+                        except Exception:  # noqa: BLE001
+                            pass
+            except Exception:  # noqa: BLE001
+                pass
         html = page.content()
         context.close()
         browser.close()
@@ -264,7 +299,11 @@ def fetch_all_products(
             if brand.use_curl_cffi:
                 html = _fetch_html_curl_cffi(brand.url, user_agent)
             elif brand.use_playwright:
-                html = _fetch_html_playwright(brand.url, user_agent, brand.playwright_wait_selector)
+                html = _fetch_html_playwright(
+                    brand.url, user_agent,
+                    brand.playwright_wait_selector,
+                    brand.playwright_image_selector,
+                )
             else:
                 html = _fetch_html(brand.url, own_session, user_agent)
             parsed = brand.parser(html)
