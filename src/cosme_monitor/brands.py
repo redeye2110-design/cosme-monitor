@@ -320,18 +320,29 @@ def _fetch_html_playwright(
                 pass
         if image_selector:
             try:
-                for img_handle in page.query_selector_all(image_selector):
-                    pid = img_handle.evaluate(
-                        "el => el.closest('[data-pid]')?.dataset?.pid ?? ''"
-                    )
-                    src = img_handle.get_attribute("src") or ""
-                    if pid and src:
-                        try:
-                            resp = context.request.get(src, timeout=10_000)
-                            if resp.ok:
-                                _playwright_images[pid] = bytes(resp.body())
-                        except Exception:  # noqa: BLE001
-                            pass
+                # Collect (pid, src) pairs
+                img_data = page.evaluate(f"""
+                    () => [...document.querySelectorAll('{image_selector}')].map(img => ({{
+                        pid: (img.closest('[data-pid]') || {{}}).dataset?.pid ?? '',
+                        src: img.src || img.getAttribute('data-src') || ''
+                    }})).filter(x => x.pid && x.src)
+                """)
+                for item in img_data:
+                    pid, src = item["pid"], item["src"]
+                    try:
+                        # fetch() inside the browser inherits all session cookies
+                        raw = page.evaluate("""
+                            async (url) => {
+                                const r = await fetch(url, {credentials: 'include'});
+                                if (!r.ok) return null;
+                                const buf = await r.arrayBuffer();
+                                return Array.from(new Uint8Array(buf));
+                            }
+                        """, src)
+                        if raw:
+                            _playwright_images[pid] = bytes(raw)
+                    except Exception:  # noqa: BLE001
+                        pass
             except Exception:  # noqa: BLE001
                 pass
         html = page.content()
