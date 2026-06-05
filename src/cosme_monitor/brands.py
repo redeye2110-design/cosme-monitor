@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import re
+import time
 from dataclasses import dataclass, field
 from typing import Callable
 from urllib.parse import urljoin
@@ -295,22 +296,32 @@ def fetch_all_products(
     products: list[Product] = []
     failures: list[str] = []
     for brand in enabled_brand_configs(enabled_brands):
-        try:
-            if brand.use_curl_cffi:
-                html = _fetch_html_curl_cffi(brand.url, user_agent)
-            elif brand.use_playwright:
-                html = _fetch_html_playwright(
-                    brand.url, user_agent,
-                    brand.playwright_wait_selector,
-                    brand.playwright_image_selector,
-                )
-            else:
-                html = _fetch_html(brand.url, own_session, user_agent)
-            parsed = brand.parser(html)
-            LOGGER.info("brand=%s url=%s parsed_products=%s", brand.name, brand.url, len(parsed))
-            products.extend(parsed)
-        except Exception as error:  # noqa: BLE001
-            message = f"{brand.name} fetch failed: {error}"
+        max_attempts = 2 if brand.use_playwright else 1
+        last_error: Exception | None = None
+        for attempt in range(max_attempts):
+            try:
+                if brand.use_curl_cffi:
+                    html = _fetch_html_curl_cffi(brand.url, user_agent)
+                elif brand.use_playwright:
+                    html = _fetch_html_playwright(
+                        brand.url, user_agent,
+                        brand.playwright_wait_selector,
+                        brand.playwright_image_selector,
+                    )
+                else:
+                    html = _fetch_html(brand.url, own_session, user_agent)
+                parsed = brand.parser(html)
+                LOGGER.info("brand=%s url=%s parsed_products=%s attempt=%s", brand.name, brand.url, len(parsed), attempt + 1)
+                products.extend(parsed)
+                last_error = None
+                break
+            except Exception as error:  # noqa: BLE001
+                last_error = error
+                if attempt < max_attempts - 1:
+                    LOGGER.info("brand=%s attempt=%s blocked, retrying in 10s...", brand.name, attempt + 1)
+                    time.sleep(10)
+        if last_error is not None:
+            message = f"{brand.name} fetch failed: {last_error}"
             LOGGER.warning(message)
             failures.append(message)
     return products, failures
