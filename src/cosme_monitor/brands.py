@@ -225,6 +225,7 @@ def _get_playwright_image(pid: str) -> bytes:
 
 
 _STEALTH_SCRIPT = """
+// --- navigator basics ---
 Object.defineProperty(navigator, 'webdriver', {get: () => false});
 Object.defineProperty(navigator, 'plugins', {get: () => [1, 2, 3, 4, 5]});
 Object.defineProperty(navigator, 'languages', {get: () => ['ja-JP', 'ja', 'en-US', 'en']});
@@ -234,6 +235,47 @@ window.navigator.permissions.query = (p) =>
   p.name === 'notifications'
     ? Promise.resolve({state: Notification.permission})
     : _origQuery(p);
+
+// --- remove CDP / automation fingerprints ---
+delete window.cdc_adoQpoasnfa76pfcZLmcfl_Array;
+delete window.cdc_adoQpoasnfa76pfcZLmcfl_Promise;
+delete window.cdc_adoQpoasnfa76pfcZLmcfl_Symbol;
+Object.defineProperty(document, 'hidden', {get: () => false});
+Object.defineProperty(document, 'visibilityState', {get: () => 'visible'});
+
+// --- Canvas fingerprint noise (Akamai key signal) ---
+const _origToDataURL = HTMLCanvasElement.prototype.toDataURL;
+HTMLCanvasElement.prototype.toDataURL = function(type) {
+  const ctx = this.getContext('2d');
+  if (ctx) {
+    const imgData = ctx.getImageData(0, 0, this.width || 1, this.height || 1);
+    imgData.data[0] ^= 1;
+    ctx.putImageData(imgData, 0, 0);
+  }
+  return _origToDataURL.apply(this, arguments);
+};
+const _origGetImageData = CanvasRenderingContext2D.prototype.getImageData;
+CanvasRenderingContext2D.prototype.getImageData = function(x, y, w, h) {
+  const data = _origGetImageData.apply(this, arguments);
+  data.data[0] ^= 1;
+  return data;
+};
+
+// --- WebGL fingerprint: hide SwiftShader (headless GPU) ---
+const _origGetParameter = WebGLRenderingContext.prototype.getParameter;
+WebGLRenderingContext.prototype.getParameter = function(param) {
+  if (param === 37445) return 'Intel Inc.';          // UNMASKED_VENDOR_WEBGL
+  if (param === 37446) return 'Intel Iris OpenGL Engine'; // UNMASKED_RENDERER_WEBGL
+  return _origGetParameter.call(this, param);
+};
+try {
+  const _origGet2 = WebGL2RenderingContext.prototype.getParameter;
+  WebGL2RenderingContext.prototype.getParameter = function(param) {
+    if (param === 37445) return 'Intel Inc.';
+    if (param === 37446) return 'Intel Iris OpenGL Engine';
+    return _origGet2.call(this, param);
+  };
+} catch(e) {}
 """
 
 
