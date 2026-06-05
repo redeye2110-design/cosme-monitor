@@ -13,6 +13,7 @@ dependencies = [
   "playwright>=1.44.0,<2",
   "playwright-stealth>=1.0.6,<2",
   "requests>=2.32.0,<3",
+  "setuptools>=68",
 ]
 
 [project.optional-dependencies]
