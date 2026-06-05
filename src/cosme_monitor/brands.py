@@ -162,6 +162,19 @@ def enabled_brand_configs(enabled_brands: tuple[str, ...] | list[str] | None) ->
     return tuple(brand for brand in BRANDS if brand.name.casefold() in requested)
 
 
+def _log_html_debug(brand_name: str, html: str) -> None:
+    """Log HTML snippets to help diagnose why 0 products were parsed."""
+    LOGGER.warning("brand=%s html_len=%s title=%s", brand_name, len(html),
+                   (html[html.find("<title>") + 7 : html.find("</title>")] if "<title>" in html else "n/a")[:120])
+    for marker in ("product", "article", "data-id", "data-pid", "data-product", "new-arrival"):
+        count = html.lower().count(marker)
+        if count:
+            idx = html.lower().find(marker)
+            LOGGER.warning("brand=%s marker=%r count=%s context=%r", brand_name, marker, count, html[max(0,idx-40):idx+80])
+            break
+    LOGGER.warning("brand=%s html_head=%r", brand_name, html[:400])
+
+
 _BLOCKED_MARKERS = (
     "Page unavailable",
     "Enable JavaScript and cookies to continue",
@@ -227,6 +240,8 @@ def fetch_all_products(
                 html = _fetch_html(brand.url, own_session, user_agent)
             parsed = brand.parser(html)
             LOGGER.info("brand=%s url=%s parsed_products=%s", brand.name, brand.url, len(parsed))
+            if len(parsed) == 0 and brand.use_playwright:
+                _log_html_debug(brand.name, html)
             products.extend(parsed)
         except Exception as error:  # noqa: BLE001
             message = f"{brand.name} fetch failed: {error}"
