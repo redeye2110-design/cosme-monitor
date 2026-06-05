@@ -1,0 +1,1 @@
+"""Cosmetics new-arrivals monitor."""
