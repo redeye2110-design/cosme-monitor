@@ -32,6 +32,7 @@ class BrandConfig:
     parser: Callable[[str], list[Product]]
     use_playwright: bool = field(default=False)
     playwright_wait_selector: str | None = field(default=None)
+    use_curl_cffi: bool = field(default=False)
 
 
 def _clean(text: str) -> str:
@@ -155,8 +156,7 @@ BRANDS = (
         "YSL",
         "https://www.yslb.jp/product/limited-collection.html",
         parse_ysl_html,
-        use_playwright=True,
-        playwright_wait_selector="[data-pid]",
+        use_curl_cffi=True,
     ),
 )
 
@@ -173,6 +173,25 @@ _BLOCKED_MARKERS = (
     "Enable JavaScript and cookies to continue",
     "サイト接続の安全性を確認しています",
 )
+
+
+def _fetch_html_curl_cffi(url: str, user_agent: str) -> str:
+    from curl_cffi import requests as cffi_requests  # lazy import — optional dep
+
+    response = cffi_requests.get(
+        url,
+        impersonate="chrome120",
+        headers={
+            "User-Agent": user_agent,
+            "Accept-Language": "ja-JP,ja;q=0.9,en-US;q=0.8,en;q=0.7",
+        },
+        timeout=30,
+    )
+    response.raise_for_status()
+    html = response.text
+    if any(marker in html for marker in _BLOCKED_MARKERS):
+        raise BrandFetchError("blocked by anti-bot protection")
+    return html
 
 
 def _fetch_html(url: str, session: requests.Session, user_agent: str) -> str:
@@ -242,7 +261,9 @@ def fetch_all_products(
     failures: list[str] = []
     for brand in enabled_brand_configs(enabled_brands):
         try:
-            if brand.use_playwright:
+            if brand.use_curl_cffi:
+                html = _fetch_html_curl_cffi(brand.url, user_agent)
+            elif brand.use_playwright:
                 html = _fetch_html_playwright(brand.url, user_agent, brand.playwright_wait_selector)
             else:
                 html = _fetch_html(brand.url, own_session, user_agent)
