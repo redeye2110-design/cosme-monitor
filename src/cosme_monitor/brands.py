@@ -36,6 +36,8 @@ class BrandConfig:
     use_curl_cffi: bool = field(default=False)
     playwright_image_selector: str | None = field(default=None)
     # CSS selector for <img> inside [data-pid] to download during Playwright scrape
+    download_image_bytes: bool = field(default=False)
+    # If True, download image bytes via requests after parsing (for non-Playwright brands)
 
 
 def _clean(text: str) -> str:
@@ -156,7 +158,7 @@ BRANDS = (
         playwright_wait_selector="div.product[data-pid]",
         playwright_image_selector="div.product[data-pid] img.tile-image",
     ),
-    BrandConfig("CHANEL", "https://www.chanel.com/jp/fragrance-beauty/new-arrivals/", parse_chanel_html),
+    BrandConfig("CHANEL", "https://www.chanel.com/jp/fragrance-beauty/new-arrivals/", parse_chanel_html, download_image_bytes=True),
     BrandConfig(
         "YSL",
         "https://www.yslb.jp/product/limited-collection.html",
@@ -287,6 +289,30 @@ def _fetch_html_playwright(
     return html
 
 
+def _attach_image_bytes(
+    products: list[Product],
+    session: requests.Session,
+    user_agent: str,
+    referer: str,
+) -> list[Product]:
+    import dataclasses
+    result = []
+    for product in products:
+        if product.image_url and not product.image_bytes:
+            try:
+                resp = session.get(
+                    product.image_url,
+                    headers={"User-Agent": user_agent, "Referer": referer},
+                    timeout=10,
+                )
+                if resp.ok:
+                    product = dataclasses.replace(product, image_bytes=resp.content)
+            except Exception:  # noqa: BLE001
+                pass
+        result.append(product)
+    return result
+
+
 def fetch_all_products(
     session: requests.Session | None = None,
     user_agent: str = DEFAULT_USER_AGENT,
@@ -311,6 +337,8 @@ def fetch_all_products(
                 else:
                     html = _fetch_html(brand.url, own_session, user_agent)
                 parsed = brand.parser(html)
+                if brand.download_image_bytes:
+                    parsed = _attach_image_bytes(parsed, own_session, user_agent, brand.url)
                 LOGGER.info("brand=%s url=%s parsed_products=%s attempt=%s", brand.name, brand.url, len(parsed), attempt + 1)
                 products.extend(parsed)
                 last_error = None
