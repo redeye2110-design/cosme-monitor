@@ -27,6 +27,10 @@ jobs:
         shell: pwsh
         run: python -m playwright install chromium
 
+      - name: Install Patchright browser
+        shell: pwsh
+        run: python -m patchright install chromium
+
       - name: Run tests
         shell: pwsh
         run: python -m pytest -q

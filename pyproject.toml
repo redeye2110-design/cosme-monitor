@@ -12,6 +12,7 @@ dependencies = [
   "beautifulsoup4>=4.12.0,<5",
   "curl-cffi>=0.7.0,<1",
   "playwright>=1.44.0,<2",
+  "patchright>=1.49.0",
   "requests>=2.32.0,<3",
 ]
 
