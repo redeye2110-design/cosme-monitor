@@ -33,6 +33,7 @@ class BrandConfig:
     use_playwright: bool = field(default=False)
     playwright_wait_selector: str | None = field(default=None)
     use_curl_cffi: bool = field(default=False)
+    use_scraper_api: bool = field(default=False)
 
 
 def _clean(text: str) -> str:
@@ -156,7 +157,7 @@ BRANDS = (
         "YSL",
         "https://www.yslb.jp/product/limited-collection.html",
         parse_ysl_html,
-        use_curl_cffi=True,
+        use_scraper_api=True,
     ),
 )
 
@@ -173,6 +174,27 @@ _BLOCKED_MARKERS = (
     "Enable JavaScript and cookies to continue",
     "サイト接続の安全性を確認しています",
 )
+
+
+def _fetch_html_scraper_api(url: str, api_key: str) -> str:
+    if not api_key:
+        raise BrandFetchError("SCRAPER_API_KEY is not set")
+    response = requests.get(
+        "https://api.scraperapi.com",
+        params={
+            "api_key": api_key,
+            "url": url,
+            "render": "true",
+            "ultra_premium": "true",
+            "country_code": "jp",
+        },
+        timeout=120,
+    )
+    response.raise_for_status()
+    html = response.text
+    if any(marker in html for marker in _BLOCKED_MARKERS):
+        raise BrandFetchError("blocked by anti-bot protection")
+    return html
 
 
 def _fetch_html_curl_cffi(url: str, user_agent: str) -> str:
@@ -255,13 +277,16 @@ def fetch_all_products(
     session: requests.Session | None = None,
     user_agent: str = DEFAULT_USER_AGENT,
     enabled_brands: tuple[str, ...] | list[str] | None = None,
+    scraper_api_key: str = "",
 ) -> tuple[list[Product], list[str]]:
     own_session = session or requests.Session()
     products: list[Product] = []
     failures: list[str] = []
     for brand in enabled_brand_configs(enabled_brands):
         try:
-            if brand.use_curl_cffi:
+            if brand.use_scraper_api:
+                html = _fetch_html_scraper_api(brand.url, scraper_api_key)
+            elif brand.use_curl_cffi:
                 html = _fetch_html_curl_cffi(brand.url, user_agent)
             elif brand.use_playwright:
                 html = _fetch_html_playwright(brand.url, user_agent, brand.playwright_wait_selector)

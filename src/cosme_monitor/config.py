@@ -10,6 +10,7 @@ class RuntimeConfig:
     state_file: str
     enabled_brands: tuple[str, ...]
     enabled_article_brands: tuple[str, ...]
+    scraper_api_key: str
 
 
 def load_runtime_config() -> RuntimeConfig:
@@ -22,4 +23,5 @@ def load_runtime_config() -> RuntimeConfig:
         state_file=os.environ.get("STATE_FILE", "seen-products.json"),
         enabled_brands=enabled_brands or ("CHANEL",),
         enabled_article_brands=enabled_article_brands or ("DIOR", "YSL"),
+        scraper_api_key=os.environ.get("SCRAPER_API_KEY", ""),
     )

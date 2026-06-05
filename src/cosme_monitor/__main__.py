@@ -9,8 +9,15 @@ from cosme_monitor.config import load_runtime_config
 from cosme_monitor.monitor import MonitorResult, run_monitor
 
 
-def _fetch_all_content(enabled_brands: tuple[str, ...], enabled_article_brands: tuple[str, ...]) -> MonitorResult:
-    products, product_failures = fetch_all_products(enabled_brands=enabled_brands)
+def _fetch_all_content(
+    enabled_brands: tuple[str, ...],
+    enabled_article_brands: tuple[str, ...],
+    scraper_api_key: str = "",
+) -> MonitorResult:
+    products, product_failures = fetch_all_products(
+        enabled_brands=enabled_brands,
+        scraper_api_key=scraper_api_key,
+    )
     articles, article_failures = fetch_all_articles(enabled_brands=enabled_article_brands)
     return MonitorResult(
         products=products,
@@ -29,6 +36,7 @@ def main() -> int:
         fetch_all_products=lambda: _fetch_all_content(
             enabled_brands=config.enabled_brands,
             enabled_article_brands=config.enabled_article_brands,
+            scraper_api_key=config.scraper_api_key,
         ),
     )
     logging.info(

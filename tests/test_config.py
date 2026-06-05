@@ -12,6 +12,7 @@ def test_load_runtime_config_defaults_to_chanel_only(monkeypatch) -> None:
         state_file="seen-products.json",
         enabled_brands=("CHANEL",),
         enabled_article_brands=("DIOR", "YSL"),
+        scraper_api_key="",
     )
 
 

@@ -2,7 +2,7 @@ name: Monitor cosmetics
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "*/10 * * * *"
   workflow_dispatch:
 
 concurrency:
@@ -36,6 +36,7 @@ jobs:
       - name: Run monitor
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          SCRAPER_API_KEY: ${{ secrets.SCRAPER_API_KEY }}
           ENABLED_BRANDS: CHANEL,Dior,YSL
           ENABLED_ARTICLE_BRANDS: DIOR,YSL
           STATE_FILE: seen-products.json
