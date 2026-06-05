@@ -31,6 +31,7 @@ class BrandConfig:
     url: str
     parser: Callable[[str], list[Product]]
     use_playwright: bool = field(default=False)
+    playwright_wait_selector: str | None = field(default=None)
 
 
 def _clean(text: str) -> str:
@@ -136,9 +137,21 @@ def parse_ysl_html(html: str) -> list[Product]:
 
 
 BRANDS = (
-    BrandConfig("Dior", "https://www.dior.com/ja_jp/beauty/page/all-new-arrivals.html", parse_dior_html, use_playwright=True),
+    BrandConfig(
+        "Dior",
+        "https://www.dior.com/ja_jp/beauty/page/all-new-arrivals.html",
+        parse_dior_html,
+        use_playwright=True,
+        playwright_wait_selector="article.product-card",
+    ),
     BrandConfig("CHANEL", "https://www.chanel.com/jp/fragrance-beauty/new-arrivals/", parse_chanel_html),
-    BrandConfig("YSL", "https://www.yslb.jp/product/limited-collection.html", parse_ysl_html, use_playwright=True),
+    BrandConfig(
+        "YSL",
+        "https://www.yslb.jp/product/limited-collection.html",
+        parse_ysl_html,
+        use_playwright=True,
+        playwright_wait_selector="[data-pid]",
+    ),
 )
 
 
@@ -172,7 +185,7 @@ def _fetch_html(url: str, session: requests.Session, user_agent: str) -> str:
     return html
 
 
-def _fetch_html_playwright(url: str, user_agent: str) -> str:
+def _fetch_html_playwright(url: str, user_agent: str, wait_selector: str | None = None) -> str:
     from playwright.sync_api import sync_playwright  # lazy import — optional dep
 
     with sync_playwright() as p:
@@ -183,7 +196,12 @@ def _fetch_html_playwright(url: str, user_agent: str) -> str:
             extra_http_headers={"Accept-Language": "ja-JP,ja;q=0.9,en-US;q=0.8,en;q=0.7"},
         )
         page = context.new_page()
-        page.goto(url, wait_until="networkidle", timeout=60_000)
+        page.goto(url, wait_until="domcontentloaded", timeout=60_000)
+        if wait_selector:
+            try:
+                page.wait_for_selector(wait_selector, timeout=30_000)
+            except Exception:  # noqa: BLE001
+                pass  # proceed with whatever rendered so far
         html = page.content()
         context.close()
         browser.close()
@@ -204,7 +222,7 @@ def fetch_all_products(
     for brand in enabled_brand_configs(enabled_brands):
         try:
             if brand.use_playwright:
-                html = _fetch_html_playwright(brand.url, user_agent)
+                html = _fetch_html_playwright(brand.url, user_agent, brand.playwright_wait_selector)
             else:
                 html = _fetch_html(brand.url, own_session, user_agent)
             parsed = brand.parser(html)
