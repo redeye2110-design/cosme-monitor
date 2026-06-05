@@ -17,10 +17,11 @@ def test_parse_dior_html_extracts_products() -> None:
 
     assert len(products) == 2
     assert products[0].brand == "Dior"
-    assert products[0].product_id == "dior-001"
-    assert products[0].name == "ディオール テスト グロウ"
-    assert products[0].price == "¥ 7,040"
-    assert products[0].image_url == "https://www.dior.com/images/dior-001.jpg"
+    assert products[0].product_id == "Y0000225"
+    assert products[0].name == "ミス ディオール ハンド クリーム ブルーミング ブーケ香るハンド クリーム"
+    assert products[0].price == "¥ 8,250"
+    assert products[0].image_url == "https://www.dior.com/dw/image/v2/Y0000225.jpg"
+    assert "Y0000225" in products[0].product_url
 
 
 def test_parse_chanel_html_extracts_products() -> None:

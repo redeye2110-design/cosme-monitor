@@ -54,23 +54,29 @@ def _extract_image(node: BeautifulSoup, *attrs: str) -> str:
 def parse_dior_html(html: str) -> list[Product]:
     soup = BeautifulSoup(html, "html.parser")
     products: list[Product] = []
-    for card in soup.select("article.product-card"):
-        link = card.select_one("a.product-card__link")
-        name = card.select_one(".product-card__name")
-        image = card.select_one("img.product-card__image")
-        if not link or not name:
+    for item in soup.select("div.product[data-pid]"):
+        pid = item.get("data-pid", "").strip()
+        if not pid:
             continue
-        product_id = card.get("data-product-id") or link.get("href", "").rstrip("/").split("/")[-1]
+        link = item.select_one("a.product-tile__link")
+        name_node = item.select_one(".product-tile__name")
+        desc_node = item.select_one(".product-tile__short-description")
+        price_node = item.select_one(".price .amount") or item.select_one(".price")
+        image = item.select_one("img.tile-image")
+        if not link or not name_node:
+            continue
+        parts = [name_node.get_text(" ", strip=True)]
+        if desc_node:
+            parts.append(desc_node.get_text(" ", strip=True))
         products.append(
             Product(
                 brand="Dior",
-                product_id=product_id,
-                name=_clean(name.get_text(" ", strip=True)),
-                price=_clean(card.select_one(".product-card__price").get_text(" ", strip=True))
-                if card.select_one(".product-card__price")
-                else _price_from_text(card.get_text(" ", strip=True)),
+                product_id=pid,
+                name=_clean(" ".join(parts)),
+                price=_clean(price_node.get_text(" ", strip=True)) if price_node
+                else _price_from_text(item.get_text(" ", strip=True)),
                 currency="JPY",
-                image_url=_extract_image(image, "src", "data-src") if image else "",
+                image_url=image.get("src", "") if image else "",
                 product_url=urljoin("https://www.dior.com", link.get("href", "")),
             )
         )
@@ -142,7 +148,7 @@ BRANDS = (
         "https://www.dior.com/ja_jp/beauty/page/all-new-arrivals.html",
         parse_dior_html,
         use_playwright=True,
-        playwright_wait_selector="article.product-card",
+        playwright_wait_selector="div.product[data-pid]",
     ),
     BrandConfig("CHANEL", "https://www.chanel.com/jp/fragrance-beauty/new-arrivals/", parse_chanel_html),
     BrandConfig(
@@ -160,25 +166,6 @@ def enabled_brand_configs(enabled_brands: tuple[str, ...] | list[str] | None) ->
         return BRANDS
     requested = {brand.casefold() for brand in enabled_brands}
     return tuple(brand for brand in BRANDS if brand.name.casefold() in requested)
-
-
-def _log_html_debug(brand_name: str, html: str) -> None:
-    """Log inner structure of first [data-pid] product to identify field selectors."""
-    from bs4 import BeautifulSoup
-    soup = BeautifulSoup(html, "html.parser")
-    items = soup.select("div[data-pid]")
-    if not items:
-        LOGGER.warning("brand=%s no div[data-pid] found; html_len=%s", brand_name, len(html))
-        return
-    LOGGER.warning("brand=%s div[data-pid] hits=%s", brand_name, len(items))
-    first = items[0]
-    # log all descendant tags with classes, attrs, and text snippets
-    for el in first.find_all(True)[:40]:
-        text = " ".join(el.get_text(" ", strip=True).split())[:60]
-        LOGGER.warning(
-            "brand=%s  <%s class=%r attrs=%r text=%r",
-            brand_name, el.name, el.get("class"), {k: v for k, v in el.attrs.items() if k != "class"}, text,
-        )
 
 
 _BLOCKED_MARKERS = (
@@ -246,8 +233,6 @@ def fetch_all_products(
                 html = _fetch_html(brand.url, own_session, user_agent)
             parsed = brand.parser(html)
             LOGGER.info("brand=%s url=%s parsed_products=%s", brand.name, brand.url, len(parsed))
-            if len(parsed) == 0 and brand.use_playwright:
-                _log_html_debug(brand.name, html)
             products.extend(parsed)
         except Exception as error:  # noqa: BLE001
             message = f"{brand.name} fetch failed: {error}"
