@@ -1,0 +1,59 @@
+{
+  "data": {
+    "total": 2,
+    "condition": {
+      "skip": 0,
+      "search_word": null,
+      "year": null,
+      "limit": 2
+    },
+    "data": [
+      {
+        "id": 631,
+        "title": "「ディオール フォーエヴァー」新製品の誕生を祝い新木優子、山下智久らが来場",
+        "url": "/main/html/rd/p/000000631.000014810.html",
+        "company": {
+          "id": 14810,
+          "name": "パルファン・クリスチャン・ディオール・ジャポン株式会社",
+          "name_origin": "パルファン・クリスチャン・ディオール・ジャポン株式会社",
+          "logo_image_url": "https://example.com/dior-logo.png"
+        },
+        "thumbs": {
+          "s": "https://example.com/dior-631.jpg"
+        },
+        "updated_at": {
+          "origin": "2026-06-04T11:04:11+09:00",
+          "time_ago": "2026年6月4日 11時04分",
+          "time_iso_8601": "2026-06-04T11:04:11+09:00",
+          "unixtime": 1780538651
+        },
+        "april_fool_type": 0,
+        "release_comple_date": "2026-06-04"
+      },
+      {
+        "id": 630,
+        "title": "近づくほどに完璧 ディオール フォーエヴァーからメイクアップ ベースとルース パウダーが新登場",
+        "url": "/main/html/rd/p/000000630.000014810.html",
+        "company": {
+          "id": 14810,
+          "name": "パルファン・クリスチャン・ディオール・ジャポン株式会社",
+          "name_origin": "パルファン・クリスチャン・ディオール・ジャポン株式会社",
+          "logo_image_url": "https://example.com/dior-logo.png"
+        },
+        "thumbs": {
+          "s": "https://example.com/dior-630.jpg"
+        },
+        "updated_at": {
+          "origin": "2026-06-01T17:57:27+09:00",
+          "time_ago": "2026年6月3日 09時00分",
+          "time_iso_8601": "2026-06-01T17:57:27+09:00",
+          "unixtime": 1780304247
+        },
+        "april_fool_type": 0,
+        "release_comple_date": "2026-06-03"
+      }
+    ]
+  },
+  "status": 200,
+  "message": ""
+}

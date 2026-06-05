@@ -34,6 +34,7 @@ jobs:
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           ENABLED_BRANDS: CHANEL
+          ENABLED_ARTICLE_BRANDS: DIOR,YSL
           STATE_FILE: seen-products.json
         run: python -m cosme_monitor
 
@@ -43,5 +44,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add seen-products.json
           git diff --cached --quiet && exit 0
-          git commit -m "chore: update seen products"
+          git commit -m "chore: update seen monitor state"
           git push

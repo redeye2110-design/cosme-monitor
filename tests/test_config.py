@@ -11,6 +11,7 @@ def test_load_runtime_config_defaults_to_chanel_only(monkeypatch) -> None:
         webhook_url="https://discord.example/webhook",
         state_file="seen-products.json",
         enabled_brands=("CHANEL",),
+        enabled_article_brands=("DIOR", "YSL"),
     )
 
 
@@ -18,8 +19,10 @@ def test_load_runtime_config_accepts_multiple_brands(monkeypatch) -> None:
     monkeypatch.setenv("DISCORD_WEBHOOK_URL", "https://discord.example/webhook")
     monkeypatch.setenv("STATE_FILE", "custom-state.json")
     monkeypatch.setenv("ENABLED_BRANDS", "CHANEL, Dior ,YSL")
+    monkeypatch.setenv("ENABLED_ARTICLE_BRANDS", "Dior,YSL")
 
     config = load_runtime_config()
 
     assert config.enabled_brands == ("CHANEL", "Dior", "YSL")
+    assert config.enabled_article_brands == ("Dior", "YSL")
     assert config.state_file == "custom-state.json"

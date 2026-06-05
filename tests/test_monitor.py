@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from cosme_monitor.discord import build_discord_payload
-from cosme_monitor.models import Product
+from cosme_monitor.models import Article, Product
 from cosme_monitor.monitor import MonitorResult, run_monitor
 
 
@@ -89,6 +89,48 @@ def test_run_monitor_notifies_only_unseen_products(tmp_path: Path) -> None:
         state_file=state_file,
         fetch_all_products=lambda: MonitorResult(products=[known, fresh], failures=[]),
         notifier=lambda product: sent.append(product),
+        now=lambda: "2026-06-05T00:05:00Z",
+    )
+
+    assert result.is_baseline is False
+    assert result.notified_count == 1
+    assert sent == [fresh]
+
+
+def test_run_monitor_notifies_unseen_articles(tmp_path: Path) -> None:
+    sent: list[Article] = []
+    state_file = tmp_path / "seen-products.json"
+
+    known = Article(
+        brand="Dior",
+        source="PR TIMES",
+        article_id="630",
+        title="Known article",
+        published_at="2026-06-03T09:00:00+09:00",
+        image_url="https://example.com/known.jpg",
+        article_url="https://example.com/known",
+    )
+    fresh = Article(
+        brand="YSL",
+        source="FASHIONSNAP",
+        article_id="2026-06-02/ysl-loveshine",
+        title="Fresh article",
+        published_at="2026-06-02 09:15",
+        image_url="https://example.com/fresh.jpg",
+        article_url="https://example.com/fresh",
+    )
+
+    run_monitor(
+        state_file=state_file,
+        fetch_all_products=lambda: MonitorResult(articles=[known], failures=[]),
+        notifier=lambda article: sent.append(article),
+        now=lambda: "2026-06-05T00:00:00Z",
+    )
+
+    result = run_monitor(
+        state_file=state_file,
+        fetch_all_products=lambda: MonitorResult(articles=[known, fresh], failures=[]),
+        notifier=lambda article: sent.append(article),
         now=lambda: "2026-06-05T00:05:00Z",
     )
 
