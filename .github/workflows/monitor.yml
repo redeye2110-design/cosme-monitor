@@ -25,11 +25,11 @@ jobs:
 
       - name: Install Playwright browsers
         shell: pwsh
-        run: playwright install chromium
+        run: python -m playwright install chromium
 
       - name: Run tests
         shell: pwsh
-        run: pytest -q
+        run: python -m pytest -q
 
       - name: Run monitor
         shell: pwsh
