@@ -16,6 +16,10 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Startup jitter
+        shell: pwsh
+        run: Start-Sleep -Seconds (Get-Random -Minimum 0 -Maximum 90)
+
       - name: Checkout
         uses: actions/checkout@v4
 

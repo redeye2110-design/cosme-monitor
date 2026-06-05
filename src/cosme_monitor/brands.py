@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import random
 import re
 import time
 from dataclasses import dataclass, field
@@ -320,6 +321,7 @@ def _fetch_html_playwright(
         )
         context.add_init_script(_STEALTH_SCRIPT)
         page = context.new_page()
+        time.sleep(random.uniform(1.0, 3.0))
         page.goto(url, wait_until="domcontentloaded", timeout=60_000)
         if wait_selector:
             try:
@@ -419,10 +421,12 @@ def fetch_all_products(
             except Exception as error:  # noqa: BLE001
                 last_error = error
                 if attempt < max_attempts - 1:
-                    LOGGER.info("brand=%s attempt=%s blocked, retrying in 10s...", brand.name, attempt + 1)
-                    time.sleep(10)
+                    wait = random.uniform(8, 15)
+                    LOGGER.info("brand=%s attempt=%s blocked, retrying in %.1fs...", brand.name, attempt + 1, wait)
+                    time.sleep(wait)
         if last_error is not None:
             message = f"{brand.name} fetch failed: {last_error}"
             LOGGER.warning(message)
             failures.append(message)
+        time.sleep(random.uniform(2.0, 5.0))
     return products, failures
