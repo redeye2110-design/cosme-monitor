@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import time
+
 import requests
 
 from cosme_monitor.models import Article, Product
@@ -39,4 +41,8 @@ def send_discord_notification(
 ) -> None:
     own_session = session or requests.Session()
     response = own_session.post(webhook_url, json=build_discord_payload(item), timeout=30)
+    if response.status_code == 429:
+        retry_after = float(response.json().get("retry_after", 2))
+        time.sleep(retry_after + 0.1)
+        response = own_session.post(webhook_url, json=build_discord_payload(item), timeout=30)
     response.raise_for_status()

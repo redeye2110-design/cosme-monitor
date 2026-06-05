@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import time
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
@@ -87,11 +88,22 @@ def run_monitor(
             raise ValueError("webhook_url is required when notifier is not provided")
         notifier = lambda item: send_discord_notification(webhook_url, item)  # noqa: E731
 
+    notified_count = 0
     if notifier is not None:
         for product in fresh_products:
-            notifier(product)
+            try:
+                notifier(product)
+                notified_count += 1
+                time.sleep(0.5)
+            except Exception as err:  # noqa: BLE001
+                LOGGER.warning("notification failed brand=%s product=%s error=%s", product.brand, product.product_id, err)
         for article in fresh_articles:
-            notifier(article)
+            try:
+                notifier(article)
+                notified_count += 1
+                time.sleep(0.5)
+            except Exception as err:  # noqa: BLE001
+                LOGGER.warning("notification failed brand=%s article=%s error=%s", article.brand, article.article_id, err)
 
     next_state = add_products_to_state(state, result.products, seen_at=timestamp)
     next_state = add_articles_to_state(next_state, result.articles, seen_at=timestamp)
@@ -109,5 +121,5 @@ def run_monitor(
         articles=result.articles,
         failures=result.failures,
         is_baseline=False,
-        notified_count=len(fresh_products) + len(fresh_articles),
+        notified_count=notified_count,
     )
