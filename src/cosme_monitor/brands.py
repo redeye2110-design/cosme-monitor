@@ -298,22 +298,20 @@ def _fetch_html_playwright(
         "--lang=ja-JP",
     ]
 
-    # Prefer Patchright (binary-level patches) over plain Playwright
+    # Priority: system Chrome > Patchright Chromium > plain Playwright Chromium
+    # System Chrome has the most authentic fingerprint; Patchright patches binary-level.
     try:
         from patchright.sync_api import sync_playwright as _sync_playwright
     except ImportError:
         from playwright.sync_api import sync_playwright as _sync_playwright  # type: ignore[assignment]
 
     with _sync_playwright() as p:
-        if "patchright" in type(p).__module__:
-            # Patchright uses its own patched Chromium — no channel= needed
+        try:
+            # 1st choice: system Chrome binary (most authentic fingerprint)
+            browser = p.chromium.launch(channel="chrome", headless=True, args=_launch_args)
+        except Exception:  # noqa: BLE001
+            # 2nd choice: Patchright / Playwright bundled Chromium
             browser = p.chromium.launch(headless=True, args=_launch_args)
-        else:
-            # Fallback: prefer system Chrome over Playwright bundled Chromium
-            try:
-                browser = p.chromium.launch(channel="chrome", headless=True, args=_launch_args)
-            except Exception:  # noqa: BLE001
-                browser = p.chromium.launch(headless=True, args=_launch_args)
         context = browser.new_context(
             user_agent=user_agent,
             locale="ja-JP",
