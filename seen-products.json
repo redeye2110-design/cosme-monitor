@@ -1,0 +1,363 @@
+{
+  "version": 1,
+  "products": {
+    "CHANEL:107230": {
+      "brand": "CHANEL",
+      "name": "ブルー ドゥ シャネル レゼクスクルジフ",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "CHANEL:116437": {
+      "brand": "CHANEL",
+      "name": "ココ マドモアゼル オードゥ パルファム パース スプレイ",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "CHANEL:116959": {
+      "brand": "CHANEL",
+      "name": "ココ マドモアゼル ボディ オイル ペルレ",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "CHANEL:116438": {
+      "brand": "CHANEL",
+      "name": "ココ マドモアゼル オードゥ パルファム パース スプレイ （リフィル)",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "CHANEL:105680": {
+      "brand": "CHANEL",
+      "name": "シャネル N°5 オードゥ トワレット",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "CHANEL:188232": {
+      "brand": "CHANEL",
+      "name": "ル クレイヨン レーヴル リップライナー ペンシル（唇の輪郭を美しく整える）",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "CHANEL:174280": {
+      "brand": "CHANEL",
+      "name": "ルージュ ココ フラッシュ リップスティック（シアーな発色）",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "CHANEL:184219": {
+      "brand": "CHANEL",
+      "name": "レ ベージュ パニエ デ エサンシエル レ ベージュ 限定セット",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "CHANEL:184199": {
+      "brand": "CHANEL",
+      "name": "レ ベージュ パレット ルガール 5色 アイシャドウ",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "CHANEL:196110": {
+      "brand": "CHANEL",
+      "name": "レ ベージュ マスカラ マスカラ（ヴォリューム、セパレート）",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "CHANEL:151819": {
+      "brand": "CHANEL",
+      "name": "レ ベージュ ブラッシュ ベル ミン 特別限定品 - リクィッド チークカラー",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "CHANEL:184012": {
+      "brand": "CHANEL",
+      "name": "レ ベージュ コレクトゥール コンシーラー（ヘルシーに輝くナチュラルな肌へ）",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "CHANEL:151799": {
+      "brand": "CHANEL",
+      "name": "レ ベージュ ヘルシー グロウ ハイライター 特別限定品 - リクィッド ハイライター",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "CHANEL:151848": {
+      "brand": "CHANEL",
+      "name": "レ ベージュ ヘルシー グロウ クッション 2026 クッション ファンデーション（フレッシュで明るいつやのある仕上がり） SPF 30/PA+++",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "CHANEL:179435": {
+      "brand": "CHANEL",
+      "name": "ヴェルニ ネイル エナメル（長時間美しい仕上がりが持続）",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "CHANEL:187546": {
+      "brand": "CHANEL",
+      "name": "ル ライナー ドゥ シャネル リクィッド アイライナー（にじみにくく、鮮やかな発色が長時間続く）",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "CHANEL:153156": {
+      "brand": "CHANEL",
+      "name": "ルージュ ココ リップスティック（長時間続くサテンの仕上がり。保湿、なめらかに整えるケア効果）",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "CHANEL:133337": {
+      "brand": "CHANEL",
+      "name": "イドゥラ ビューティ マイクロ リップ セラム リップ用 集中保湿美容液",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "CHANEL:133355": {
+      "brand": "CHANEL",
+      "name": "イドゥラ ビューティ マイクロ クリーム N（リフィル） 保湿クリーム",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "CHANEL:133365": {
+      "brand": "CHANEL",
+      "name": "イドゥラ ビューティ マイクロ ジェル クリーム（リフィル） 保湿ジェル クリーム",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "CHANEL:133360": {
+      "brand": "CHANEL",
+      "name": "イドゥラ ビューティ マイクロ ジェル クリーム 保湿ジェル クリーム",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "CHANEL:133350": {
+      "brand": "CHANEL",
+      "name": "イドゥラ ビューティ マイクロ クリーム N 保湿クリーム",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    }
+  },
+  "articles": {
+    "article:Dior:PR TIMES:631": {
+      "brand": "Dior",
+      "title": "「ディオール フォーエヴァー」新製品の誕生を祝い新木優子、山下智久らが来場",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:Dior:PR TIMES:630": {
+      "brand": "Dior",
+      "title": "近づくほどに完璧 ディオール フォーエヴァーからメイクアップ ベースとルース パウダーが新登場",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:Dior:PR TIMES:629": {
+      "brand": "Dior",
+      "title": "第79回カンヌ国際映画祭",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:Dior:PR TIMES:628": {
+      "brand": "Dior",
+      "title": "ディオール バックステージからガラスのツヤめきを演出する水光ハイライト スティックなど新作と限定色のコレクションが登場",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:Dior:PR TIMES:626": {
+      "brand": "Dior",
+      "title": "柔らかな陽光のように、幸せなひとときを呼び起こすフレグランス「ディオール パラダイス」",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:Dior:PR TIMES:627": {
+      "brand": "Dior",
+      "title": "愛のように香る「ミス ディオール」から 新しいハンド クリームとボディ クリームが登場",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:Dior:PR TIMES:625": {
+      "brand": "Dior",
+      "title": "メットガラ 2026 ジスのメイクルック",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:Dior:PR TIMES:624": {
+      "brand": "Dior",
+      "title": "ディオール ソラー 約1週間持続する美しいセルフタンニング",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:Dior:PR TIMES:623": {
+      "brand": "Dior",
+      "title": "ディオール新ＵＶプロテクター インビジブル UV フルイド＆スティック",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:Dior:PR TIMES:622": {
+      "brand": "Dior",
+      "title": "オフ オン メイクアップ リムーバー新登場。清らかにOFF、うるおいをON。",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:Dior:PR TIMES:621": {
+      "brand": "Dior",
+      "title": "高密度のハリ感を肌へ グランヴィルローズの恵み※1を補う プレミアム ミスト美容液、誕生",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:Dior:PR TIMES:619": {
+      "brand": "Dior",
+      "title": "ディオール 「ル ボーム」 新デザイン3色が限定発売",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:Dior:PR TIMES:617": {
+      "brand": "Dior",
+      "title": "ディオール アディクトから“グロス in リップスティック”誕生 ディオール アディクト グラス リップスティック",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:Dior:PR TIMES:618": {
+      "brand": "Dior",
+      "title": "ディオール カプチュールから美のメカニズム※１をサポートする 美容液ローション誕生",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:Dior:PR TIMES:616": {
+      "brand": "Dior",
+      "title": "KYOTOGRAPHIE 京都国際写真祭 サテライトイベント「KG+」2026",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:Dior:PR TIMES:615": {
+      "brand": "Dior",
+      "title": "スイートな色と香りに満ちた世界へと誘う期間限定イベント『INSIDE THE DIOR ADDICT SWEET SHOPディオール アディクト キャンディ ショップ』",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:Dior:PR TIMES:612": {
+      "brand": "Dior",
+      "title": "サマー コレクション 2026 ＜ディオリビエラ＞",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:Dior:PR TIMES:611": {
+      "brand": "Dior",
+      "title": "日本の美意識を宿すディオールの香り「サクラ」",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:Dior:PR TIMES:610": {
+      "brand": "Dior",
+      "title": "新ジャドール インテンスの発売を記念した「クラブ ジャドール」をビバリーヒルズにて開催",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:Dior:PR TIMES:609": {
+      "brand": "Dior",
+      "title": "花々の色彩と芳香がピークを迎え、満ちていくゴールドの雫。ジャドール インテンス誕生",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:YSL:PR TIMES:432": {
+      "brand": "YSL",
+      "title": "YSL BEAUTYの人気ギフトラッピングがアップデート。 4色のハートモチーフのギフトパッチが6月3日（水）より登場。",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:YSL:PR TIMES:433": {
+      "brand": "YSL",
+      "title": "YSL BEAUTY初のハートの形をしたマルチクリーム「ケアクラッシュ セラムクリーム」登場！",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:YSL:PR TIMES:431": {
+      "brand": "YSL",
+      "title": "「World Refill Day」に向け、YSL BEAUTYが提案する“地球へのLOVE”を体現するキャンペーン「START WITH LOVE」が6月1日(月)より順次スタート",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:YSL:PR TIMES:430": {
+      "brand": "YSL",
+      "title": "【YSL BEAUTY】父の日に向けて、モダンマスキュリンフレグランス「MYSLF」のギフトセットが登場。",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:YSL:PR TIMES:429": {
+      "brand": "YSL",
+      "title": "【YSL BEAUTY】人気のアイシャドウ、チーク、リップから、クリスタルの輝きと澄んだ透明感を纏う、サマーコレクション登場。",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:YSL:PR TIMES:428": {
+      "brand": "YSL",
+      "title": "YSL BEAUTYのリップ史上、最大のヒットとなる新“ふわじゅわ”リップ「YSL ラブヌード リップスティック」から待望の刻印サービスが4月22日（水）より開始。",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:YSL:PR TIMES:427": {
+      "brand": "YSL",
+      "title": "YSLの主役級チーク「YSL メイクミーブラッシュ パウダー」からセンシュアルなヌードカラーが新登場。",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:YSL:PR TIMES:426": {
+      "brand": "YSL",
+      "title": "【YSL BEAUTY】母の日に向けて、YSLの“LOVE”が詰まったアイテムがギフトセットとなって登場。",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:YSL:PR TIMES:424": {
+      "brand": "YSL",
+      "title": "イヴ・サンローラン・ボーテ ジャパン アンバサダーのTWICE SANAが、『美的』本誌に初登場＆初表紙！360度パーフェクトビューティの秘訣を語る。",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:YSL:PR TIMES:421": {
+      "brand": "YSL",
+      "title": "新“ふわじゅわ”リップの限定イベントに 岩瀬洋志さん、齊藤京子さん、シシド・カフカさん、SO GEONさん(NEXZ)、HARUさん(NEXZ)、本田翼さん、宮世琉弥さん、山中柔太朗さんらが登場",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:YSL:PR TIMES:422": {
+      "brand": "YSL",
+      "title": "新“ふわじゅわ”リップ「YSL ラブヌード リップスティック」のポップアップイベントに、窪塚愛流、本田紗来、HITOMI(本田仁美)、本田真凜、ミチ、村上虹郎ら豪華ゲストが来場",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:YSL:PR TIMES:420": {
+      "brand": "YSL",
+      "title": "「YSL ラブヌード リップスティック」のイベントを盛り上げるレセプションに CHISAさん(XG)、HARVEYさん(XG)が登場。「ステージでも使いたい」と新“ふわじゅわ”リップの魅力を語る",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:YSL:PR TIMES:419": {
+      "brand": "YSL",
+      "title": "新“ふわじゅわ”リップ「YSL ラブヌード リップスティック」のポップアップ イベントを盛り上げるレセプションに イヴ・サンローラン・ボーテ アンバサダー 平野紫耀が登場",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:YSL:PR TIMES:418": {
+      "brand": "YSL",
+      "title": "新“ふわじゅわ”リップ「YSL ラブヌード リップスティック」のポップアップイベント「YSL LOVENUDE HOTEL TOKYO 」に、大平修蔵、鈴木 えみ、谷まりあ、山田優ら豪華ゲストが来場",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:YSL:PR TIMES:417": {
+      "brand": "YSL",
+      "title": "【YSL BEAUTY】新“ふわじゅわ”リップ「YSL ラブヌード リップスティック」誕生！ふわっとぼかし、じゅわっとにじむ水彩ヌードカラー。ツヤでもマットでもない、未体験の質感と出会う新感覚リップ",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:YSL:PR TIMES:416": {
+      "brand": "YSL",
+      "title": "新“ふわじゅわ”リップ「YSL ラブヌード リップスティック」を体験できるポップアップイベント「YSL LOVENUDE HOTEL TOKYO SECRET CHECK-IN」を東京・表参道で開催！",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:YSL:PR TIMES:415": {
+      "brand": "YSL",
+      "title": "【YSL BEAUTY】『ピュアショット』シリーズから新アイケア「ピュアショット アイクリーム」誕生。朝の目もと、すっきりと引き締まった印象へ。",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:YSL:PR TIMES:414": {
+      "brand": "YSL",
+      "title": "【YSL BEAUTY】瞬時にひんやり肌リセットを叶える、新感覚「お直し」クッション フェイスパウダー『オールアワーズ ブラー クッション』が限定で登場。",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:YSL:PR TIMES:413": {
+      "brand": "YSL",
+      "title": "【YSL BEAUTY】イヴ・サンローラン・ボーテ アンバサダー平野紫耀が魅せる、新たな“自由”。ジューシーなラズベリーの新フレグランス「リブレ オーデパルファム ベリークラッシュ」最新LOOKを公開",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:YSL:PR TIMES:412": {
+      "brand": "YSL",
+      "title": "【YSL BEAUTY】あふれる“LOVE”を贈るシーズンに、アイコニックな限定フレグランス ギフトセットと、特別な限定ギフトラッピングが登場。",
+      "source": "PR TIMES",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    },
+    "article:Dior:FASHIONSNAP:2026-06-03/dior-primer-powder": {
+      "brand": "Dior",
+      "title": "「ディオール フォーエヴァー」からプライマーとルースパウダー登場 限定ケースも",
+      "source": "FASHIONSNAP",
+      "first_seen_at": "2026-06-05T14:33:10.029227+00:00"
+    }
+  }
+}
