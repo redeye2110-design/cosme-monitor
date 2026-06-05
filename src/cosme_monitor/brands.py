@@ -193,15 +193,18 @@ def _fetch_html(url: str, session: requests.Session, user_agent: str) -> str:
 
 def _fetch_html_playwright(url: str, user_agent: str, wait_selector: str | None = None) -> str:
     from playwright.sync_api import sync_playwright  # lazy import — optional dep
+    from playwright_stealth import stealth_sync  # noqa: PLC0415
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         context = browser.new_context(
             user_agent=user_agent,
             locale="ja-JP",
+            viewport={"width": 1280, "height": 800},
             extra_http_headers={"Accept-Language": "ja-JP,ja;q=0.9,en-US;q=0.8,en;q=0.7"},
         )
         page = context.new_page()
+        stealth_sync(page)
         page.goto(url, wait_until="domcontentloaded", timeout=60_000)
         if wait_selector:
             try:
