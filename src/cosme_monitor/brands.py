@@ -191,9 +191,21 @@ def _fetch_html(url: str, session: requests.Session, user_agent: str) -> str:
     return html
 
 
+_STEALTH_SCRIPT = """
+Object.defineProperty(navigator, 'webdriver', {get: () => false});
+Object.defineProperty(navigator, 'plugins', {get: () => [1, 2, 3, 4, 5]});
+Object.defineProperty(navigator, 'languages', {get: () => ['ja-JP', 'ja', 'en-US', 'en']});
+window.chrome = {runtime: {}};
+const _origQuery = window.navigator.permissions.query.bind(window.navigator.permissions);
+window.navigator.permissions.query = (p) =>
+  p.name === 'notifications'
+    ? Promise.resolve({state: Notification.permission})
+    : _origQuery(p);
+"""
+
+
 def _fetch_html_playwright(url: str, user_agent: str, wait_selector: str | None = None) -> str:
     from playwright.sync_api import sync_playwright  # lazy import — optional dep
-    from playwright_stealth import stealth_sync  # noqa: PLC0415
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
@@ -203,8 +215,8 @@ def _fetch_html_playwright(url: str, user_agent: str, wait_selector: str | None 
             viewport={"width": 1280, "height": 800},
             extra_http_headers={"Accept-Language": "ja-JP,ja;q=0.9,en-US;q=0.8,en;q=0.7"},
         )
+        context.add_init_script(_STEALTH_SCRIPT)
         page = context.new_page()
-        stealth_sync(page)
         page.goto(url, wait_until="domcontentloaded", timeout=60_000)
         if wait_selector:
             try:
