@@ -163,16 +163,34 @@ def enabled_brand_configs(enabled_brands: tuple[str, ...] | list[str] | None) ->
 
 
 def _log_html_debug(brand_name: str, html: str) -> None:
-    """Log HTML snippets to help diagnose why 0 products were parsed."""
-    LOGGER.warning("brand=%s html_len=%s title=%s", brand_name, len(html),
-                   (html[html.find("<title>") + 7 : html.find("</title>")] if "<title>" in html else "n/a")[:120])
-    for marker in ("product", "article", "data-id", "data-pid", "data-product", "new-arrival"):
-        count = html.lower().count(marker)
-        if count:
-            idx = html.lower().find(marker)
-            LOGGER.warning("brand=%s marker=%r count=%s context=%r", brand_name, marker, count, html[max(0,idx-40):idx+80])
+    """Log DOM structure to identify correct product selectors."""
+    from bs4 import BeautifulSoup
+    soup = BeautifulSoup(html, "html.parser")
+    # probe candidate selectors
+    candidates = [
+        "article.product-card", "[data-product-id]", "[data-sku]", "[data-pid]",
+        "li.product", "div.product", ".product-item", ".product-cell",
+        "[class*='product-card']", "[class*='ProductCard']",
+        "article", "li[class*='product']", "div[class*='product-item']",
+        ".new-arrival", "[class*='new-arrival']",
+    ]
+    for sel in candidates:
+        nodes = soup.select(sel)
+        if nodes:
+            sample = nodes[0]
+            LOGGER.warning(
+                "brand=%s selector=%r hits=%s sample_tag=%s sample_class=%s sample_attrs=%s",
+                brand_name, sel, len(nodes), sample.name, sample.get("class"),
+                {k: v for k, v in list(sample.attrs.items())[:6] if k != "class"},
+            )
+    # fallback: log first article or li with many siblings
+    for tag in ("article", "li"):
+        items = soup.find_all(tag)
+        if len(items) >= 3:
+            first = items[0]
+            LOGGER.warning("brand=%s tag=%s total=%s first_class=%r first_attrs=%r",
+                           brand_name, tag, len(items), first.get("class"), dict(list(first.attrs.items())[:4]))
             break
-    LOGGER.warning("brand=%s html_head=%r", brand_name, html[:400])
 
 
 _BLOCKED_MARKERS = (
