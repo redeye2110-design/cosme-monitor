@@ -290,8 +290,20 @@ def _fetch_html_playwright(
     global _playwright_images
     _playwright_images = {}
 
+    _launch_args = [
+        "--disable-blink-features=AutomationControlled",
+        "--no-first-run",
+        "--no-service-autorun",
+        "--disable-infobars",
+        "--lang=ja-JP",
+    ]
+
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
+        # Prefer system Chrome (less detectable than Playwright's Chromium)
+        try:
+            browser = p.chromium.launch(channel="chrome", headless=True, args=_launch_args)
+        except Exception:  # noqa: BLE001
+            browser = p.chromium.launch(headless=True, args=_launch_args)
         context = browser.new_context(
             user_agent=user_agent,
             locale="ja-JP",
