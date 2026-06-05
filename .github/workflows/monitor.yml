@@ -27,13 +27,16 @@ jobs:
       - name: Install dependencies
         run: python -m pip install -e .[dev]
 
+      - name: Install Playwright browsers
+        run: playwright install chromium --with-deps
+
       - name: Run tests
         run: pytest -q
 
       - name: Run monitor
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          ENABLED_BRANDS: CHANEL
+          ENABLED_BRANDS: CHANEL,Dior,YSL
           ENABLED_ARTICLE_BRANDS: DIOR,YSL
           STATE_FILE: seen-products.json
         run: python -m cosme_monitor

@@ -43,6 +43,7 @@ def test_parse_ysl_html_extracts_products() -> None:
     assert products[0].name == "クチュール ミニ クラッチ No.740 エンドレス スパーク"
     assert products[0].price == "10,890円（税込）"
     assert products[0].image_url == "https://www.yslb.jp/images/ysl-740.jpg"
+    assert products[0].product_url == "https://www.yslb.jp/product/limited/ysl-740.html"
 
 
 def test_enabled_brand_configs_filters_to_requested_brands() -> None:

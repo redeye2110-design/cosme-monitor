@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Callable
 from urllib.parse import urljoin
 
@@ -30,6 +30,7 @@ class BrandConfig:
     name: str
     url: str
     parser: Callable[[str], list[Product]]
+    use_playwright: bool = field(default=False)
 
 
 def _clean(text: str) -> str:
@@ -105,20 +106,23 @@ def parse_chanel_html(html: str) -> list[Product]:
 def parse_ysl_html(html: str) -> list[Product]:
     soup = BeautifulSoup(html, "html.parser")
     products: list[Product] = []
-    for item in soup.select(".l-presult__item"):
-        link = item.select_one("a.c-product-tile")
-        name = item.select_one(".c-product-tile__name")
-        variation = item.select_one(".c-product-tile__variation")
-        image = item.select_one("img.c-product-tile__image")
-        if not link or not name:
+    for item in soup.select("[data-pid]"):
+        pid = item.get("data-pid", "").strip()
+        if not pid:
             continue
-        parts = [name.get_text(" ", strip=True)]
-        if variation:
-            parts.append(variation.get_text(" ", strip=True))
+        link = item.select_one("a[href]")
+        name_node = item.select_one(".c-product-tile__name")
+        variation_node = item.select_one(".c-product-tile__variation")
+        image = item.select_one("img")
+        if not link or not name_node:
+            continue
+        parts = [name_node.get_text(" ", strip=True)]
+        if variation_node:
+            parts.append(variation_node.get_text(" ", strip=True))
         products.append(
             Product(
                 brand="YSL",
-                product_id=item.get("data-pid", ""),
+                product_id=pid,
                 name=_clean(" ".join(parts)),
                 price=_clean(item.select_one(".c-product-tile__price").get_text(" ", strip=True))
                 if item.select_one(".c-product-tile__price")
@@ -132,9 +136,9 @@ def parse_ysl_html(html: str) -> list[Product]:
 
 
 BRANDS = (
-    BrandConfig("Dior", "https://www.dior.com/ja_jp/beauty/page/all-new-arrivals.html", parse_dior_html),
+    BrandConfig("Dior", "https://www.dior.com/ja_jp/beauty/page/all-new-arrivals.html", parse_dior_html, use_playwright=True),
     BrandConfig("CHANEL", "https://www.chanel.com/jp/fragrance-beauty/new-arrivals/", parse_chanel_html),
-    BrandConfig("YSL", "https://www.yslb.jp/product/limited-collection.html", parse_ysl_html),
+    BrandConfig("YSL", "https://www.yslb.jp/product/limited-collection.html", parse_ysl_html, use_playwright=True),
 )
 
 
@@ -143,6 +147,13 @@ def enabled_brand_configs(enabled_brands: tuple[str, ...] | list[str] | None) ->
         return BRANDS
     requested = {brand.casefold() for brand in enabled_brands}
     return tuple(brand for brand in BRANDS if brand.name.casefold() in requested)
+
+
+_BLOCKED_MARKERS = (
+    "Page unavailable",
+    "Enable JavaScript and cookies to continue",
+    "サイト接続の安全性を確認しています",
+)
 
 
 def _fetch_html(url: str, session: requests.Session, user_agent: str) -> str:
@@ -156,12 +167,28 @@ def _fetch_html(url: str, session: requests.Session, user_agent: str) -> str:
     )
     response.raise_for_status()
     html = response.text
-    blocked_markers = (
-        "Page unavailable",
-        "Enable JavaScript and cookies to continue",
-        "サイト接続の安全性を確認しています",
-    )
-    if any(marker in html for marker in blocked_markers):
+    if any(marker in html for marker in _BLOCKED_MARKERS):
+        raise BrandFetchError("blocked by anti-bot protection")
+    return html
+
+
+def _fetch_html_playwright(url: str, user_agent: str) -> str:
+    from playwright.sync_api import sync_playwright  # lazy import — optional dep
+
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        context = browser.new_context(
+            user_agent=user_agent,
+            locale="ja-JP",
+            extra_http_headers={"Accept-Language": "ja-JP,ja;q=0.9,en-US;q=0.8,en;q=0.7"},
+        )
+        page = context.new_page()
+        page.goto(url, wait_until="networkidle", timeout=60_000)
+        html = page.content()
+        context.close()
+        browser.close()
+
+    if any(marker in html for marker in _BLOCKED_MARKERS):
         raise BrandFetchError("blocked by anti-bot protection")
     return html
 
@@ -176,7 +203,10 @@ def fetch_all_products(
     failures: list[str] = []
     for brand in enabled_brand_configs(enabled_brands):
         try:
-            html = _fetch_html(brand.url, own_session, user_agent)
+            if brand.use_playwright:
+                html = _fetch_html_playwright(brand.url, user_agent)
+            else:
+                html = _fetch_html(brand.url, own_session, user_agent)
             parsed = brand.parser(html)
             LOGGER.info("brand=%s url=%s parsed_products=%s", brand.name, brand.url, len(parsed))
             products.extend(parsed)
