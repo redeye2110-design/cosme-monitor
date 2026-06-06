@@ -44,7 +44,7 @@ jobs:
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           ENABLED_BRANDS: CHANEL,Dior,YSL
-          ENABLED_ARTICLE_BRANDS: DIOR,YSL
+          ENABLED_ARTICLE_BRANDS: DIOR,YSL,CHANEL
           STATE_FILE: seen-products.json
         run: python -m cosme_monitor
 

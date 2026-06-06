@@ -1,0 +1,59 @@
+{
+  "data": {
+    "total": 2,
+    "condition": {
+      "skip": 0,
+      "search_word": null,
+      "year": null,
+      "limit": 2
+    },
+    "data": [
+      {
+        "id": 12,
+        "title": "シャネル「カメリア フトゥーラ」数量限定コレクションを発売",
+        "url": "/main/html/rd/p/000000012.000150142.html",
+        "company": {
+          "id": 150142,
+          "name": "シャネル合同会社",
+          "name_origin": "シャネル合同会社",
+          "logo_image_url": "https://example.com/chanel-logo.png"
+        },
+        "thumbs": {
+          "s": "https://example.com/chanel-12.jpg"
+        },
+        "updated_at": {
+          "origin": "2026-06-05T11:00:00+09:00",
+          "time_ago": "2026年6月5日 11時00分",
+          "time_iso_8601": "2026-06-05T11:00:00+09:00",
+          "unixtime": 1780624800
+        },
+        "april_fool_type": 0,
+        "release_comple_date": "2026-06-05"
+      },
+      {
+        "id": 11,
+        "title": "シャネル フレグランス＆ビューティ ブティック 新店舗オープン",
+        "url": "/main/html/rd/p/000000011.000150142.html",
+        "company": {
+          "id": 150142,
+          "name": "シャネル合同会社",
+          "name_origin": "シャネル合同会社",
+          "logo_image_url": "https://example.com/chanel-logo.png"
+        },
+        "thumbs": {
+          "s": "https://example.com/chanel-11.jpg"
+        },
+        "updated_at": {
+          "origin": "2026-06-01T09:00:00+09:00",
+          "time_ago": "2026年6月1日 09時00分",
+          "time_iso_8601": "2026-06-01T09:00:00+09:00",
+          "unixtime": 1780272000
+        },
+        "april_fool_type": 0,
+        "release_comple_date": "2026-06-01"
+      }
+    ]
+  },
+  "status": 200,
+  "message": ""
+}

@@ -35,6 +35,23 @@ def test_parse_prtimes_articles_payload_extracts_articles() -> None:
     assert articles[0].image_url == "https://example.com/dior-631.jpg"
 
 
+def test_parse_prtimes_articles_payload_extracts_chanel_articles() -> None:
+    payload = _fixture_json("prtimes_chanel_articles.json")
+
+    articles = parse_prtimes_articles_payload(
+        payload=payload,
+        brand="CHANEL",
+        source_label="PR TIMES",
+    )
+
+    assert len(articles) == 2
+    assert articles[0].brand == "CHANEL"
+    assert articles[0].article_id == "12"
+    assert articles[0].title == "シャネル「カメリア フトゥーラ」数量限定コレクションを発売"
+    assert articles[0].article_url == "https://prtimes.jp/main/html/rd/p/000000012.000150142.html"
+    assert articles[0].image_url == "https://example.com/chanel-12.jpg"
+
+
 def test_filter_fashionsnap_articles_matches_brand_keywords() -> None:
     html = _fixture_text("fashionsnap_beauty_articles.html")
 
@@ -51,6 +68,24 @@ def test_filter_fashionsnap_articles_matches_brand_keywords() -> None:
     assert articles[0].title == "YSL「ラブシャイン」から新作リップが登場"
     assert articles[0].article_url == "https://www.fashionsnap.com/article/2026-06-02/ysl-loveshine/"
     assert articles[0].image_url == "https://example.com/ysl-loveshine.jpg"
+
+
+def test_filter_fashionsnap_articles_matches_chanel_keywords() -> None:
+    html = _fixture_text("fashionsnap_beauty_articles.html")
+
+    articles = filter_fashionsnap_articles(
+        html=html,
+        brand="CHANEL",
+        keywords=("CHANEL", "シャネル"),
+    )
+
+    assert len(articles) == 1
+    assert articles[0].brand == "CHANEL"
+    assert articles[0].source == "FASHIONSNAP"
+    assert articles[0].article_id == "2026-06-04/chanel-camelia-futura"
+    assert articles[0].title == "CHANEL「カメリア フトゥーラ」から限定メイクアップが登場"
+    assert articles[0].article_url == "https://www.fashionsnap.com/article/2026-06-04/chanel-camelia-futura/"
+    assert articles[0].image_url == "https://example.com/chanel-camelia-futura.jpg"
 
 
 def test_build_discord_payload_for_article() -> None:

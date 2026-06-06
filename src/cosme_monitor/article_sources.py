@@ -31,11 +31,13 @@ class PrtimesSourceConfig:
 PRTIMES_SOURCES = (
     PrtimesSourceConfig(brand="Dior", company_id=14810),
     PrtimesSourceConfig(brand="YSL", company_id=32072),
+    PrtimesSourceConfig(brand="CHANEL", company_id=150142),
 )
 
 FASHIONSNAP_KEYWORDS: dict[str, tuple[str, ...]] = {
     "Dior": ("Dior", "ディオール"),
     "YSL": ("YSL", "イヴ・サンローラン", "サンローラン"),
+    "CHANEL": ("CHANEL", "シャネル"),
 }
 
 
@@ -161,7 +163,7 @@ def _fetch_fashionsnap_html(session: requests.Session, user_agent: str) -> str:
 
 def enabled_article_brands(enabled_brands: tuple[str, ...] | list[str] | None) -> tuple[str, ...]:
     if not enabled_brands:
-        return ("Dior", "YSL")
+        return ("Dior", "YSL", "CHANEL")
     requested = {brand.casefold() for brand in enabled_brands}
     return tuple(
         source.brand

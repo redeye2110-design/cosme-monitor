@@ -5,6 +5,8 @@ Discord notification monitor for cosmetics launches.
 The current production setup is:
 
 - `CHANEL` product new-arrivals monitoring
+- `CHANEL` article monitoring via `PR TIMES` and `FASHIONSNAP`
+- `Dior` product new-arrivals monitoring
 - `Dior` article monitoring via `PR TIMES` and `FASHIONSNAP`
 - `YSL` article monitoring via `PR TIMES` and `FASHIONSNAP`
 
@@ -25,8 +27,8 @@ Set the webhook and run:
 
 ```powershell
 $env:DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/..."
-$env:ENABLED_BRANDS="CHANEL"
-$env:ENABLED_ARTICLE_BRANDS="DIOR,YSL"
+$env:ENABLED_BRANDS="CHANEL,Dior,YSL"
+$env:ENABLED_ARTICLE_BRANDS="DIOR,YSL,CHANEL"
 .\.venv\Scripts\python -m cosme_monitor
 ```
 
@@ -41,13 +43,14 @@ The workflow runs every 5 minutes and commits `seen-products.json` when the stat
 
 Default production env:
 
-- `ENABLED_BRANDS=CHANEL`
-- `ENABLED_ARTICLE_BRANDS=DIOR,YSL`
+- `ENABLED_BRANDS=CHANEL,Dior,YSL`
+- `ENABLED_ARTICLE_BRANDS=DIOR,YSL,CHANEL`
 
 ## Current constraints
 
 - CHANEL product monitoring works with plain HTTP fetching in current verification.
-- Dior and YSL product pages may return anti-bot or challenge responses.
-- Dior and YSL article monitoring uses public PR TIMES API responses and FASHIONSNAP beauty news HTML.
+- Dior product monitoring currently works through browser automation in local verification.
+- YSL product pages may still return anti-bot or challenge responses.
+- CHANEL, Dior, and YSL article monitoring uses public PR TIMES API responses and FASHIONSNAP beauty news HTML.
 
-For production, keep `ENABLED_BRANDS=CHANEL` and use article monitoring for `Dior` and `YSL`.
+Current production defaults match the workflow file and monitor CHANEL and Dior products plus CHANEL, Dior, and YSL articles.
