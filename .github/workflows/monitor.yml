@@ -1,8 +1,11 @@
 name: Monitor cosmetics
 
 on:
-  schedule:
-    - cron: "*/10 * * * *"
+  # NOTE: GitHub's scheduled (cron) events are best-effort and heavily throttled
+  # — a */10 cron only fired a few times per hour in practice. The 10-min cadence
+  # is now driven by a local Windows Task Scheduler task (run_local.ps1) on the
+  # self-hosted runner PC, which runs the monitor directly. workflow_dispatch is
+  # kept for manual runs.
   workflow_dispatch:
 
 concurrency:

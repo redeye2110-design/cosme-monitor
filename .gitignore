@@ -3,3 +3,6 @@
 __pycache__/
 *.pyc
 *.egg-info/
+local-secrets.ps1
+run_local.ps1
+local-run.log
